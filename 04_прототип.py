@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
+"""Учебный CLI-прототип кредитного конвейера. Не для реального кредитования."""
 import argparse
 import csv
 import hashlib
 import json
 import math
-import re
 import time
 import uuid
 from concurrent.futures import ThreadPoolExecutor, TimeoutError as FutureTimeout
@@ -41,12 +41,7 @@ def smev_emulator(client_id):
 
 
 def validate(app):
-    # По обязательному сценарию app_0004 приоритет у отсутствующего дохода,
-    # даже если одновременно не заполнен возраст.
-    income_raw = str(app.get("income") or "").strip()
-    if not income_raw:
-        return "NEED_MORE_DATA", "MISSING_INCOME"
-
+    """Возвращает (decision, reason) для первой ошибки или None."""
     age_raw = str(app.get("age") or "").strip()
     if not age_raw:
         return "NEED_MORE_DATA", "MISSING_AGE"
@@ -65,6 +60,9 @@ def validate(app):
     if employment not in EMPLOYMENT:
         return "NEED_MORE_DATA", "VALIDATION_ERROR"
 
+    income_raw = str(app.get("income") or "").strip()
+    if not income_raw:
+        return "NEED_MORE_DATA", "MISSING_INCOME"
     try:
         income = float(income_raw)
         amount = float(app.get("amount", ""))
@@ -81,8 +79,7 @@ def validate(app):
         return "NEED_MORE_DATA", "VALIDATION_ERROR"
     if not str(app.get("app_id") or "").strip() or not str(app.get("client_id") or "").strip():
         return "NEED_MORE_DATA", "VALIDATION_ERROR"
-    passport_hash = str(app.get("passport_hash") or "").strip()
-    if not re.fullmatch(r"[0-9a-fA-F]{16}", passport_hash):
+    if not str(app.get("passport_hash") or "").strip():
         return "NEED_MORE_DATA", "VALIDATION_ERROR"
     return None
 
@@ -129,12 +126,10 @@ def call_external(service, request_id, app_id, run_id, func, log_path, timeout=3
         started = time.monotonic()
         executor = ThreadPoolExecutor(max_workers=1)
         future = executor.submit(func)
-        error_type = ""
         try:
             result, status = future.result(timeout=timeout), "SUCCESS"
         except FutureTimeout:
             result, status = None, "TIMEOUT"
-            error_type = "TimeoutError"
             future.cancel()
         except Exception as exc:
             result, status = None, "ERROR"
@@ -163,12 +158,13 @@ def make_result(app_id, decision, reason, total="", dti=""):
 def process(app, source="emulator", external_log="external.log", audit_log="decision_audit.log", run_id=None, index=1):
     run_id = run_id or uuid.uuid4().hex
     app_id = str(app.get("app_id") or "UNKNOWN")
-    total = dti = ""
+    total = dti = ""  # пусто означает: метрика не рассчитывалась
     parts = {}
     early = validate(app)
     if early:
         result = make_result(app_id, *early)
     elif float(app["income"]) < 30000:
+        # Нормативный ранний отказ: внешние проверки и DTI не запускались.
         result = make_result(app_id, "REFUSED", "LOW_INCOME")
     else:
         if source == "csv":
@@ -222,6 +218,7 @@ REASON_MESSAGES = {
 }
 
 def validation_details(app):
+    """Возвращает конкретные поля, которые отсутствуют или заполнены неверно."""
     problems = []
     def missing(key):
         return str(app.get(key) or "").strip() == ""
@@ -264,6 +261,7 @@ def validation_details(app):
     return problems
 
 def print_application_result(result, app):
+    """Понятный построчный результат обработки заявки в консоли."""
     app_id = result["app_id"]
     decision = result["decision"]
     reason = result["reason"]
