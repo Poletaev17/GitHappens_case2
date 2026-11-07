@@ -1,0 +1,4 @@
+product\_id,name,min\_amount,max\_amount,min\_term,max\_term,min\_age,max\_age,min\_income,rate
+prod\_standard,Стандартный кредит,10000,1000000,3,60,18,70,30000,0.18
+prod\_express,Экспресс-кредит,10000,300000,3,24,18,60,20000,0.22
+prod\_premium,Премиальный кредит,500000,5000000,12,60,21,65,150000,0.15
