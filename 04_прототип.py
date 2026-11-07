@@ -200,84 +200,6 @@ def process(app, source="emulator", external_log="external.log", audit_log="deci
     return result
 
 
-
-REASON_MESSAGES = {
-    "LOW_INCOME": "Отказ: доход ниже минимального порога 30 000 рублей.",
-    "AGE_OUT_OF_RANGE": "Отказ: возраст должен быть от 18 до 70 лет.",
-    "INVALID_EMPLOYMENT": "Отказ: статус занятости «безработный» не подходит под условия продукта.",
-    "HIGH_DTI": "Отказ: долговая нагрузка (DTI) превышает допустимые 50% дохода.",
-    "BKI_DELINQUENCY": "Отказ: кредитная история не прошла проверку (низкий балл или просрочка).",
-    "AMOUNT_LIMIT": "Отказ: запрошенная сумма превышает 10 месячных доходов.",
-    "SMEV_MISMATCH": "Отказ: данные клиента не совпали при проверке СМЭВ.",
-    "LOW_SCORE": "Отказ: итоговый скоринговый балл ниже минимального порога 60.",
-    "EXTERNAL_TIMEOUT": "Не хватает результата внешней проверки: сервис не ответил. Повторите попытку позже.",
-    "MISSING_AGE": "Не хватает данных: заполните поле «возраст» (age).",
-    "MISSING_EMPLOYMENT": "Не хватает данных: заполните поле «занятость» (employment).",
-    "MISSING_INCOME": "Не хватает данных: заполните поле «доход» (income).",
-    "VALIDATION_ERROR": "Данные отсутствуют или заполнены некорректно. Проверьте обязательные поля и форматы значений.",
-}
-
-def validation_details(app):
-    """Возвращает конкретные поля, которые отсутствуют или заполнены неверно."""
-    problems = []
-    def missing(key):
-        return str(app.get(key) or "").strip() == ""
-    if missing("age"):
-        problems.append("age (возраст)")
-    elif not str(app.get("age")).strip().isdigit():
-        problems.append("age (возраст: требуется целое число)")
-    else:
-        age = int(app["age"])
-        if not 18 <= age <= 70:
-            problems.append("age (возраст вне диапазона 18–70)")
-    if missing("employment"):
-        problems.append("employment (занятость)")
-    elif str(app.get("employment")).strip() not in EMPLOYMENT:
-        problems.append("employment (неизвестный статус занятости)")
-    if missing("income"):
-        problems.append("income (доход)")
-    else:
-        try:
-            if float(app["income"]) <= 0:
-                problems.append("income (доход должен быть больше нуля)")
-        except (TypeError, ValueError):
-            problems.append("income (требуется число)")
-    for key, label in (("amount", "amount (сумма кредита)"), ("term", "term (срок кредита)")):
-        try:
-            value = float(app.get(key, ""))
-            if not math.isfinite(value):
-                raise ValueError
-            if key == "amount" and not 10000 <= value <= 5000000:
-                problems.append(label + " (допустимо от 10 000 до 5 000 000)")
-            if key == "term" and (not value.is_integer() or not 3 <= value <= 60):
-                problems.append(label + " (целое число от 3 до 60 месяцев)")
-        except (TypeError, ValueError):
-            problems.append(label + " (отсутствует или требуется число)")
-    if str(app.get("family") or "").strip() not in FAMILY:
-        problems.append("family (семейное положение: married / children / single)")
-    for key in ("app_id", "client_id", "passport_hash"):
-        if missing(key):
-            problems.append(key + " (обязательное поле)")
-    return problems
-
-def print_application_result(result, app):
-    """Понятный построчный результат обработки заявки в консоли."""
-    app_id = result["app_id"]
-    decision = result["decision"]
-    reason = result["reason"]
-    labels = {"APPROVED": "ОДОБРЕНО", "REFUSED": "ОТКАЗ", "NEED_MORE_DATA": "НУЖНЫ ДАННЫЕ"}
-    print(f"\nЗаявка {app_id}: {labels.get(decision, decision)}")
-    if decision == "APPROVED":
-        print("  Причина: заявка прошла проверки и набрала достаточный скоринговый балл.")
-    else:
-        print(f"  Причина [{reason}]: {REASON_MESSAGES.get(reason, 'Требуется дополнительная проверка заявки.')}")
-        if reason == "VALIDATION_ERROR":
-            problems = validation_details(app)
-            if problems:
-                print("  Проверьте: " + "; ".join(problems) + ".")
-    if result["score"] != "":
-        print(f"  Скоринговый балл: {result['score']}; DTI: {result['dti']}")
-
 def main():
     parser = argparse.ArgumentParser(description="Учебный кредитный конвейер")
     parser.add_argument("input", help="applications.csv")
@@ -289,16 +211,11 @@ def main():
     run_id = uuid.uuid4().hex
     with open(args.input, newline="", encoding="utf-8-sig") as f:
         apps = list(csv.DictReader(f))
-    results = []
-    print(f"Обработка файла: {args.input}\nЗаявок: {len(apps)}")
-    for i, app in enumerate(apps, start=1):
-        result = process(app, args.external_source, args.external_log, args.audit_log, run_id, i)
-        results.append(result)
-        print_application_result(result, app)
+    results = [process(a, args.external_source, args.external_log, args.audit_log, run_id, i)
+               for i, a in enumerate(apps, start=1)]
     with open(args.out, "w", newline="", encoding="utf-8-sig") as f:
         writer = csv.DictWriter(f, fieldnames=OUT_FIELDS)
         writer.writeheader(); writer.writerows(results)
-    print("\n--- ИТОГ ОБРАБОТКИ ---")
     print(f"run_id: {run_id}")
     print(f"external_source: {args.external_source}")
     print(f"OK: {args.out}; обработано: {len(results)}; решения: {dict(Counter(x['decision'] for x in results))}")
