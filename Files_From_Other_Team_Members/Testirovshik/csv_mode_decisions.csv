@@ -1,0 +1,101 @@
+﻿app_id,product_id,product_name,rate,min_income_required,decision,reason,score,dti
+app_0001,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,90,0.21
+app_0002,prod_standard,Стандартный кредит,0.18,30000,REFUSED,LOW_INCOME,,
+app_0003,prod_premium,Премиальный кредит,0.15,150000,APPROVED,,100,0.17
+app_0004,,,,,NEED_MORE_DATA,MISSING_AGE,,
+app_0005,prod_standard,Стандартный кредит,0.18,30000,REFUSED,AMOUNT_LIMIT,65,0.39
+app_0006,prod_standard,Стандартный кредит,0.18,30000,REFUSED,BKI_DELINQUENCY,35,0.22
+app_0007,prod_premium,Премиальный кредит,0.15,150000,REFUSED,SMEV_MISMATCH,100,0.14
+app_0008,,,,,REFUSED,AGE_OUT_OF_RANGE,,
+app_0009,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,85,0.22
+app_0010,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0011,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,70,0.18
+app_0012,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,80,0.24
+app_0013,prod_standard,Стандартный кредит,0.18,30000,REFUSED,LOW_SCORE,55,0.23
+app_0014,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.12
+app_0015,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,60,0.09
+app_0016,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,60,0.08
+app_0017,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0018,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,70,0.33
+app_0019,prod_standard,Стандартный кредит,0.18,30000,REFUSED,LOW_SCORE,55,0.21
+app_0020,prod_premium,Премиальный кредит,0.15,150000,APPROVED,,70,0.14
+app_0021,prod_premium,Премиальный кредит,0.15,150000,APPROVED,,80,0.1
+app_0022,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0023,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,2.06
+app_0024,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,0.83
+app_0025,prod_standard,Стандартный кредит,0.18,30000,REFUSED,LOW_SCORE,45,0.05
+app_0026,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,60,0.05
+app_0027,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0028,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,80,0.21
+app_0029,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,85,0.12
+app_0030,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,70,0.1
+app_0031,prod_premium,Премиальный кредит,0.15,150000,APPROVED,,70,0.07
+app_0032,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0033,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,1.6
+app_0034,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,0.67
+app_0035,prod_standard,Стандартный кредит,0.18,30000,REFUSED,AMOUNT_LIMIT,70,0.41
+app_0036,prod_standard,Стандартный кредит,0.18,30000,REFUSED,AMOUNT_LIMIT,75,0.33
+app_0037,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0038,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.13
+app_0039,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.08
+app_0040,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.06
+app_0041,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,75,0.04
+app_0042,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0043,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,1.15
+app_0044,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,60,0.5
+app_0045,prod_standard,Стандартный кредит,0.18,30000,REFUSED,LOW_SCORE,50,0.32
+app_0046,prod_standard,Стандартный кредит,0.18,30000,REFUSED,SMEV_MISMATCH,65,0.26
+app_0047,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0048,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,0.83
+app_0049,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,75,0.04
+app_0050,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.04
+app_0051,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.03
+app_0052,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0053,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,0.69
+app_0054,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,75,0.33
+app_0055,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.23
+app_0056,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.2
+app_0057,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0058,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,0.67
+app_0059,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,85,0.37
+app_0060,prod_premium,Премиальный кредит,0.15,150000,APPROVED,,70,0.23
+app_0061,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,70,0.01
+app_0062,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0063,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,60,0.46
+app_0064,prod_standard,Стандартный кредит,0.18,30000,REFUSED,LOW_SCORE,45,0.21
+app_0065,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,60,0.14
+app_0066,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.13
+app_0067,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0068,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,0.5
+app_0069,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,70,0.29
+app_0070,prod_premium,Премиальный кредит,0.15,150000,REFUSED,LOW_SCORE,55,0.18
+app_0071,prod_premium,Премиальный кредит,0.15,150000,APPROVED,,70,0.13
+app_0072,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0073,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,70,0.23
+app_0074,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,70,0.12
+app_0075,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,60,0.09
+app_0076,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,60,0.08
+app_0077,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0078,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,90,0.33
+app_0079,prod_standard,Стандартный кредит,0.18,30000,REFUSED,SMEV_MISMATCH,80,0.21
+app_0080,prod_premium,Премиальный кредит,0.15,150000,APPROVED,,80,0.14
+app_0081,prod_premium,Премиальный кредит,0.15,150000,APPROVED,,85,0.1
+app_0082,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0083,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,2.06
+app_0084,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,0.83
+app_0085,prod_standard,Стандартный кредит,0.18,30000,REFUSED,LOW_SCORE,55,0.05
+app_0086,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.05
+app_0087,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0088,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.21
+app_0089,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,65,0.12
+app_0090,prod_standard,Стандартный кредит,0.18,30000,REFUSED,SMEV_MISMATCH,60,0.1
+app_0091,prod_premium,Премиальный кредит,0.15,150000,APPROVED,,75,0.07
+app_0092,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0093,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,1.6
+app_0094,prod_standard,Стандартный кредит,0.18,30000,REFUSED,HIGH_DTI,,0.67
+app_0095,prod_standard,Стандартный кредит,0.18,30000,REFUSED,AMOUNT_LIMIT,55,0.41
+app_0096,prod_standard,Стандартный кредит,0.18,30000,REFUSED,AMOUNT_LIMIT,55,0.33
+app_0097,,,,,REFUSED,INVALID_EMPLOYMENT,,
+app_0098,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,90,0.13
+app_0099,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,85,0.08
+app_0100,prod_standard,Стандартный кредит,0.18,30000,APPROVED,,75,0.06

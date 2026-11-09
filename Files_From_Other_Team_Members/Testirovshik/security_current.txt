@@ -1,0 +1,11 @@
+Проверка ИБ на синтетических данных проекта, дата 06.11.2026
+
+applications.csv: 100 строк; поле passport_hash есть; оригинального поля passport нет.
+Для каждого режима (emulator и csv): Client.csv содержит 100 строк и заполненный passport_hash (синтетический hash).
+Для каждого режима: внешние и audit-журналы сверены с 100 входными синтетическими hash; совпадений 0.
+Для каждого режима: app_id и run_id присутствуют во внешнем и audit-логах; audit содержит 100 записей.
+В приложении не найдены роли/вход пользователей; Windows ACL не проверялись.
+Git: https://github.com/Poletaev17/GitHappens_case2
+SHA256 applications.csv: 7e20c081dd05fdfba84530121f92171bc8e5c7f3760b16458c7c804dd9921604
+SHA256 04_прототип.py: 30a2174a5e80a560e6a29fb31d334840685c1f9bd5b81726c42ed1f8f5027b7f
+SHA256 test_прототип.py: 62a20aa7f83cfee46c436395bd750eac6569a0366b709ff0603d7f6cba08d8a2

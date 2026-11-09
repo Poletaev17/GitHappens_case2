@@ -1,0 +1,182 @@
+openapi: 3.0.3
+info:
+  title: Fin-Tech Credit Conveyor
+  version: "1.0.0"
+  description: >-
+    Контракт API кредитного конвейера. Актуальный 04_прототип.py является CLI-прототипом:
+    HTTP paths из этого OpenAPI в нём не реализованы; фактический результат CLI описан схемой Decision.
+
+servers:
+  - url: http://localhost:8082
+
+components:
+  schemas:
+    Application:
+      type: object
+      required: [app_id, age, income, employment, family, amount, term]
+      additionalProperties: false
+      properties:
+        app_id: {type: string, pattern: '^app_[0-9]{4}$'}
+        client_id: {type: string, pattern: '^cli_[0-9]{4}$'}
+        passport_hash: {type: string, pattern: '^[a-f0-9]{16}$'}
+        age: {type: integer, minimum: 18, maximum: 70}
+        income: {type: number, exclusiveMinimum: 0}
+        employment:
+          enum: [employed, self-employed, student, retired, unemployed]
+        family:
+          enum: [single, married, children]
+        amount: {type: number, minimum: 10000, maximum: 5000000}
+        term: {type: integer, minimum: 3, maximum: 60}
+
+    Decision:
+      type: object
+      description: >-
+        Фактический объект результата функции make_result() в 04_прототип.py.
+        Это не строка Decision.csv: CSV сущность содержит дополнительные поля
+        decision_id, amount_approved, term_approved и created_at.
+      required: [app_id, product_id, product_name, rate, min_income_required, decision, reason, score, dti]
+      additionalProperties: false
+      properties:
+        app_id: {type: string, description: "Идентификатор заявки; при отсутствии входного app_id прототип использует UNKNOWN"}
+        product_id: {type: string, description: "ID выбранного продукта или пустая строка, если продукт не выбран"}
+        product_name: {type: string, description: "Название выбранного продукта или пустая строка"}
+        rate: {type: string, description: "Ставка из product.csv (в прототипе читается как строка) или пустая строка"}
+        min_income_required: {type: string, description: "Минимальный доход из product.csv (в прототипе читается как строка) или пустая строка"}
+        decision:
+          type: string
+          enum: [APPROVED, REFUSED, NEED_MORE_DATA]
+          description: "MANUAL_REVIEW в текущем 04_прототип.py не формируется"
+        reason: {type: string, description: "Код причины; для APPROVED — пустая строка"}
+        score:
+          oneOf:
+            - {type: integer, minimum: 0, maximum: 100}
+            - {type: string, enum: [""]}
+          description: "Целое значение score либо пустая строка, если скоринг не выполнялся"
+        dti:
+          oneOf:
+            - {type: number, minimum: 0}
+            - {type: string, enum: [""]}
+          description: "Округлённый до 2 знаков DTI либо пустая строка, если DTI не рассчитывался"
+
+    ExternalRequest:
+      type: object
+      description: "Одна строка JSONL из external.log; описывает фактическую попытку локального вызова эмулятора, а не HTTP-запрос к реальному сервису."
+      required: [timestamp, run_id, app_id, service, request_id, attempt, status, latency_ms, result, error_type]
+      additionalProperties: false
+      properties:
+        timestamp: {type: string, format: date-time}
+        run_id: {type: string, pattern: '^[a-f0-9]{32}$'}
+        app_id: {type: string}
+        service: {type: string, enum: [BKI, SMEV]}
+        request_id:
+          type: string
+          pattern: '^[a-f0-9]{8}-[0-9]{4,}-(BKI|SMEV)$'
+          description: "Первые 8 символов run_id, порядковый номер заявки с дополнением нулями до 4 знаков и имя сервиса"
+        attempt: {type: integer, minimum: 1, maximum: 2}
+        status: {type: string, enum: [SUCCESS, TIMEOUT, ERROR]}
+        latency_ms: {type: integer, minimum: 0}
+        result:
+          type: object
+          description: "Тело результата при SUCCESS; пустой объект {} при TIMEOUT или ERROR"
+        error_type:
+          type: string
+          description: "Пустая строка при SUCCESS; TimeoutError при TIMEOUT; имя класса исключения при ERROR"
+
+    Error:
+      type: object
+      description: "Формат ошибки для описанных HTTP-endpoint. Текущий 04_прототип.py работает как CLI и такой HTTP-ответ не формирует."
+      required: [error_code, message]
+      additionalProperties: false
+      properties:
+        error_code: {type: string, example: VALIDATION_ERROR}
+        message: {type: string}
+        retryable: {type: boolean, default: false}
+        details:
+          type: object
+          description: "Дополнительный контекст ошибки, например список невалидных полей"
+
+paths:
+  /health:
+    get:
+      summary: Проверка живости
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: {type: object, properties: {status: {type: string}}}
+
+  /api/v1/applications:
+    post:
+      summary: Подать кредитную заявку
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: {$ref: '#/components/schemas/Application'}
+      responses:
+        '201':
+          description: Заявка принята, конвейер начал обработку
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [app_id, status]
+                properties:
+                  app_id: {type: string, pattern: '^app_[0-9]{4}$'}
+                  status: {type: string, enum: [PROCESSING]}
+        '422':
+          description: Заявка не прошла валидацию
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Error'}
+        '409':
+          description: Заявка с таким app_id уже существует
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Error'}
+
+  /api/v1/applications/{id}/decision:
+    get:
+      summary: Получить решение по заявке
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string, pattern: '^app_[0-9]{4}$'}
+      responses:
+        '200':
+          description: Решение готово
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Decision'}
+        '404':
+          description: Заявка с таким app_id не найдена
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Error'}
+        '425':
+          description: Решение ещё считается, повторите запрос позже
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Error'}
+
+  /api/v1/applications/{id}/recalculate:
+    post:
+      summary: Пересчитать решение по заявке (например, после обновления внешних данных)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string, pattern: '^app_[0-9]{4}$'}
+      responses:
+        '200':
+          description: Решение пересчитано
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Decision'}
+        '409':
+          description: Заявка в финальном статусе (APPROVED/REFUSED), пересчёт недоступен
+          content:
+            application/json:
+              schema: {$ref: '#/components/schemas/Error'}

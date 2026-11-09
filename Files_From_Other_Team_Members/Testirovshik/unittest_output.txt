@@ -1,0 +1,26 @@
+test_print_result_explains_when_product_is_not_determined (test_прототип.ConsoleOutputTests.test_print_result_explains_when_product_is_not_determined) ... ok
+test_print_result_includes_selected_product_name_and_id (test_прототип.ConsoleOutputTests.test_print_result_includes_selected_product_name_and_id) ... ok
+test_main_reads_application_csv (test_прототип.InputFileTests.test_main_reads_application_csv) ... ok
+test_audit_does_not_contain_passport_hash (test_прототип.ProcessingTests.test_audit_does_not_contain_passport_hash) ... ok
+test_bki_emulator_is_deterministic (test_прототип.ProcessingTests.test_bki_emulator_is_deterministic) ... ok
+test_bki_refusal (test_прототип.ProcessingTests.test_bki_refusal) ... ok
+test_four_entity_csv_files_are_written (test_прототип.ProcessingTests.test_four_entity_csv_files_are_written) ... ok
+test_good_application_is_approved_with_selected_product (test_прототип.ProcessingTests.test_good_application_is_approved_with_selected_product) ... ok
+test_high_dti_refusal_uses_selected_product_rate (test_прототип.ProcessingTests.test_high_dti_refusal_uses_selected_product_rate) ... ok
+test_income_below_product_minimum_causes_low_income_refusal (test_прототип.ProcessingTests.test_income_below_product_minimum_causes_low_income_refusal) ... ok
+test_missing_income_requests_more_data (test_прототип.ProcessingTests.test_missing_income_requests_more_data) ... ok
+test_smev_emulator_is_deterministic (test_прототип.ProcessingTests.test_smev_emulator_is_deterministic) ... ok
+test_timeout_does_not_return_success (test_прототип.ProcessingTests.test_timeout_does_not_return_success) ... ok
+test_express_product_uses_its_own_minimum_income (test_прототип.ProductSelectionTests.test_express_product_uses_its_own_minimum_income) ... ok
+test_income_below_premium_minimum_returns_low_income (test_прототип.ProductSelectionTests.test_income_below_premium_minimum_returns_low_income) ... ok
+test_income_equal_to_product_minimum_is_allowed (test_прототип.ProductSelectionTests.test_income_equal_to_product_minimum_is_allowed) ... ok
+test_premium_product_uses_its_own_minimum_income (test_прототип.ProductSelectionTests.test_premium_product_uses_its_own_minimum_income) ... ok
+test_product_file_contains_three_current_products (test_прототип.ProductSelectionTests.test_product_file_contains_three_current_products) ... ok
+test_standard_product_is_selected (test_прототип.ProductSelectionTests.test_standard_product_is_selected) ... ok
+test_without_requested_product_selects_lowest_rate_that_fits (test_прототип.ProductSelectionTests.test_without_requested_product_selects_lowest_rate_that_fits) ... ok
+test_wrong_amount_range_is_not_misreported_as_low_income (test_прототип.ProductSelectionTests.test_wrong_amount_range_is_not_misreported_as_low_income) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.518s
+
+OK
